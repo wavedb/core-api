@@ -26,4 +26,15 @@ export default class ProjectService {
 			}
 		})
 	}
+
+	async getProjectById(projectId: string, userId: string) {
+		return await prisma.project.findUnique({
+			where: {
+				id: projectId,
+				user: {
+					id: userId
+				}
+			}
+		})
+	}
 }

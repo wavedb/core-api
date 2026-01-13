@@ -20,4 +20,16 @@ export class UserService {
 			}
 		})
 	}
+
+	async getUserByApiKey(apiKey: string) {
+		return await prisma.user.findFirst({
+			where: {
+				apiKeys: {
+					some: {
+						key: apiKey
+					}
+				}
+			}
+		})
+	}
 }

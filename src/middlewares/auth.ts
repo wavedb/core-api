@@ -1,7 +1,9 @@
 import type { Context } from "hono";
 import { every, some } from "hono/combine";
+import { HTTPException } from "hono/http-exception";
 import { jwt } from "hono/jwt";
 import { JWT_SECRET } from "@/constants";
+import { UserService } from "@/services/user.service";
 
 export const authJwtMiddleware = async (c: Context, next: () => Promise<void>) => {
 	const jwtMiddleware = jwt({
@@ -32,3 +34,20 @@ export const authJwtUserMiddleware = async (c: Context, next: () => Promise<void
 }
 
 export const authMiddleware = some(every(authJwtMiddleware, authJwtUserMiddleware));
+
+export const apiKeyMiddleware = async (c: Context, next: () => Promise<void>) => {
+	const apiKey = c.req.header("X-Api-Key")
+	if (typeof apiKey !== "string") {
+		throw new HTTPException(401, { message: "api key is required in X-Api-Key header" })
+	}
+
+	const userService = new UserService()
+	const user = await userService.getUserByApiKey(apiKey)
+	if (!user) {
+		throw new HTTPException(401, { message: "invalid api key" })
+	}
+
+	c.set("userId", user.id)
+
+	await next()
+}
