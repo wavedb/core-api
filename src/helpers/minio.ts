@@ -28,11 +28,11 @@ export class MinIOHelper {
 		}
 	}
 
-	async uploadImage(objectName: string, imageBuffer: Buffer) {
+	async uploadFile(objectName: string, fileBuffer: Buffer) {
 		return await this.client.putObject(
 			MINIO_BUCKET_NAME,
 			objectName,
-			imageBuffer,
+			fileBuffer
 		);
 	}
 }

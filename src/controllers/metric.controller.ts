@@ -77,7 +77,7 @@ export async function writeMetricImageController(
 		}
 
 		const imageBuffer = await imageFile.arrayBuffer();
-		await minioHelper.uploadImage(objectName, Buffer.from(imageBuffer));
+		await minioHelper.uploadFile(objectName, Buffer.from(imageBuffer));
 
 		const metricService = new MetricService();
 		const data = await metricService.writeMetric(
@@ -127,7 +127,7 @@ export async function writeMetricAudioController(
 		}
 
 		const audioBuffer = await audioFile.arrayBuffer();
-		await minioHelper.uploadImage(objectName, Buffer.from(audioBuffer));
+		await minioHelper.uploadFile(objectName, Buffer.from(audioBuffer));
 
 		const metricService = new MetricService();
 		const data = await metricService.writeMetric(
