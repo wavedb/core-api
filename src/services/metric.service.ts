@@ -44,7 +44,7 @@ export class MetricService {
 	async writeMetric(
 		runnerId: string,
 		name: string,
-		value: number,
+		value: string,
 		step: number,
 		tag?: string,
 		force?: boolean,

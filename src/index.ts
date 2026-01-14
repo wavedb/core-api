@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
+import { NODE_ENV } from "./constants";
 import { BaseError } from "./exceptions";
 import authRouter from "./routers/auth.router";
 import projectRouter from "./routers/project.router";
@@ -50,8 +51,14 @@ app.onError((err, c) => {
 			err.statusCode as ContentfulStatusCode,
 		);
 	}
-
-	console.error(err);
-	return c.json({ message: "Internal Server Error" }, 500);
+	if (NODE_ENV === "development") {
+		console.error(err)
+		return c.json(
+			{ message: "Internal Server Error", stack: err.stack },
+			500,
+		);
+	} else {
+		return c.json({ message: "Internal Server Error" }, 500);
+	}
 });
 export default app;

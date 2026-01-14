@@ -1,11 +1,14 @@
 import { Hono } from "hono";
 import {
 	getMetricsController,
-	writeMetricController,
+	writeMetricImageController,
+	writeMetricScalarController
 } from "@/controllers/metric.controller";
 
 const metricRouter = new Hono();
 
 metricRouter.get("/", getMetricsController);
-metricRouter.post("/write", writeMetricController);
+metricRouter.post("/write/scalar", writeMetricScalarController);
+metricRouter.post("/write/image", writeMetricImageController);
+
 export default metricRouter;

@@ -1,12 +1,25 @@
 import z from "zod";
 
+export const metricScalar = z.float64("metric value must be a float number");
+export const metricFile = z.file("metric image must be a file object");
+
 export const writeMetricValidationSchema = z.object({
 	name: z.string().min(2, "name must be at least 2 characters long"),
-	value: z.float64("value must be a float number"),
-	step: z.number().min(0, "step must be a non-negative integer"),
+	value: z.union([
+		metricScalar,
+		metricFile
+	]),
+	step: z.union([
+		z.number().min(0, "step must be a non-negative integer"),
+		z.string().regex(/^\d+$/, "step string must represent a non-negative integer"),
+	]),
 	tag: z.string().max(100, "tag cannot exceed 100 characters").optional(),
-	force: z.boolean().optional(),
+	force: z.union([
+		z.boolean(),
+		z.string().regex(/^(true|false)$/, "force string must be 'true' or 'false'"),
+	]).optional(),
 });
+export const writeMetricImageValidationSchema = z.instanceof(File)
 
 export const getMetricQueryValidationSchema = z.object({
 	orderBy: z

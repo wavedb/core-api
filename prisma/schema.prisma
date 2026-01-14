@@ -13,6 +13,21 @@ datasource db {
     provider = "postgresql"
 }
 
+enum RunnerStatus {
+    PENDING
+    RUNNING
+    COMPLETED
+    FAILED
+    CANCELED
+}
+
+enum RunnerMetricType {
+    SCALAR
+    IMAGE
+    AUDIO
+    TEXT
+}
+
 model User {
     id            String    @id
     name          String
@@ -109,12 +124,13 @@ model Run {
 }
 
 model RunnerMetric {
-    id        String   @id @default(uuid())
+    id        String           @id @default(uuid())
     name      String
-    value     Float
+    value     String
     step      Int
     tag       String?
-    timestamp DateTime @default(now())
+    type      RunnerMetricType @default(SCALAR)
+    timestamp DateTime         @default(now())
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
