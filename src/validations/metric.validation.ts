@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const metricScalar = z.float64("metric value must be a float number");
-export const metricFile = z.file("metric image must be a file object");
+export const metricFile = z.file("metric image or audio must be a file object");
 
 export const writeMetricValidationSchema = z.object({
 	name: z.string().min(2, "name must be at least 2 characters long"),
@@ -22,6 +22,11 @@ export const writeMetricValidationSchema = z.object({
 		])
 		.optional(),
 });
+
+export const writeMetricSystemValidationSchema = z.object({
+	data: z.array(writeMetricValidationSchema)
+})
+
 export const writeMetricImageValidationSchema = z.instanceof(File);
 
 export const getMetricQueryValidationSchema = z.object({
@@ -46,6 +51,10 @@ export type GetMetricQueryValidationType = z.infer<
 export const writeMetricValidation = async (data: unknown) => {
 	return writeMetricValidationSchema.safeParseAsync(data);
 };
+
+export const writeMetricSystemValidation = async (data: unknown) => {
+	return writeMetricSystemValidationSchema.safeParseAsync(data);
+}
 
 export const getMetricQueryValidation = async (data: unknown) => {
 	return getMetricQueryValidationSchema.safeParseAsync(data);

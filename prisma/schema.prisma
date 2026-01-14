@@ -26,6 +26,7 @@ enum RunnerMetricType {
     IMAGE
     AUDIO
     TEXT
+	SYSTEM
 }
 
 model User {

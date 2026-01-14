@@ -1,4 +1,5 @@
 import { MetricWriteError } from "@/exceptions";
+import type { RunnerMetricType } from "@/generated/prisma/enums";
 import { prisma } from "@/helpers/prisma";
 import type { GetMetricQueryValidationType } from "@/validations/metric.validation";
 
@@ -46,12 +47,13 @@ export class MetricService {
 		name: string,
 		value: string,
 		step: number,
+		type: RunnerMetricType,
 		tag?: string,
 		force?: boolean,
 	) {
 		const isExistingStep = await this.getMetricByStep(runnerId, step);
-		console.log(isExistingStep);
-		if (isExistingStep) {
+
+		if (type !== "SYSTEM" && isExistingStep) {
 			if (!force) {
 				throw new MetricWriteError(
 					`metric for step ${step} already exists`,
@@ -66,6 +68,7 @@ export class MetricService {
 					name: name,
 					value: value,
 					tag: tag,
+					type: type
 				},
 			});
 		}
@@ -76,6 +79,7 @@ export class MetricService {
 				value: value,
 				step: step,
 				tag: tag,
+				type: type,
 
 				run: {
 					connect: {
