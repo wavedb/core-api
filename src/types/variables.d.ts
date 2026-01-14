@@ -7,3 +7,7 @@ export type AuthVariables = {
 export type ProjectVariables = {
 	projectId: string;
 } & AuthVariables
+
+export type RunnerVariables = {
+	runnerId: string;
+} & ProjectVariables

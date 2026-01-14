@@ -1,6 +1,7 @@
-import { decode, sign, verify } from "hono/jwt"
+import { decode } from "hono/jwt"
 import type { JWTPayload } from "hono/utils/jwt/types"
-import { JWT_EXPIRATION, JWT_SECRET } from "@/constants"
+import { JWT_EXPIRATION } from "@/constants"
+import { auth } from "./auth"
 
 export async function generateJWT(userId: string): Promise<string> {
 	const payload: JWTPayload = {
@@ -9,13 +10,22 @@ export async function generateJWT(userId: string): Promise<string> {
 		iat: Math.floor(Date.now() / 1000), // Issued at
 		iss: "wavedb"
 	}
-	return await sign(payload, JWT_SECRET, "HS256")
+	const signedToken = await auth.api.signJWT({
+		body: {
+			payload: payload
+		}
+	})
+	return signedToken.token
 }
 
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
 	try {
-		const payload = await verify(token, JWT_SECRET, "HS256")
-		return payload as JWTPayload
+		const verified = await auth.api.verifyJWT({
+			body: {
+				token: token
+			}
+		})
+		return verified.payload as JWTPayload
 	} catch {
 		return null
 	}
