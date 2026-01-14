@@ -27,9 +27,7 @@ export class MetricService {
 	) {
 		return await prisma.runnerMetric.findFirst({
 			where: {
-				run: {
-					id: runnerId
-				},
+				runId: runnerId,
 				step: step
 			}
 		})
@@ -44,6 +42,7 @@ export class MetricService {
 		force?: boolean
 	) {
 		const isExistingStep = await this.getMetricByStep(runnerId, step)
+		console.log(isExistingStep)
 		if (isExistingStep) {
 			if (!force) {
 				throw new MetricWriteError(`metric for step ${step} already exists`, 409)

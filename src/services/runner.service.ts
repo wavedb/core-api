@@ -14,4 +14,13 @@ export class RunnerService {
 			}
 		})
 	}
+
+	async getRunnerById(runnerId: string, projectId: string) {
+		return await prisma.run.findFirst({
+			where: {
+				id: runnerId,
+				projectId: projectId,
+			}
+		})
+	}
 }

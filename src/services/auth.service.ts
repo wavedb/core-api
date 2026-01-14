@@ -1,4 +1,5 @@
 import { UserAlreadyExistsError, UserNotFoundError } from "@/exceptions";
+import { auth } from "@/helpers/auth";
 import { generateJWT } from "@/helpers/jwt";
 import { prisma } from "@/helpers/prisma";
 import type { LoginValidationType, RegisterValidationType } from "@/validations/auth.validation";
@@ -26,31 +27,21 @@ export default class AuthService {
 	}
 
 	async registerUser(data: RegisterValidationType) {
-		const user = await this.findUserByEmail(data.email)
-		if (user) {
-			throw new UserAlreadyExistsError("user with this email already exists", 400)
-		}
-
-		return await prisma.user.create({
-			data: {
+		return await auth.api.signUpEmail({
+			body: {
 				email: data.email,
 				name: data.name,
-				password: (await this.toHash(data.password)).toString()
-			}
+				password: data.password
+			},
 		})
 	}
 
 	async loginUser(data: LoginValidationType) {
-		const user = await this.findUserByEmail(data.email)
-		if (!user) {
-			throw new UserNotFoundError("user with this email does not exist", 404)
-		}
-
-		const isPasswordValid = await this.comparePassword(data.password, user.password)
-		if (!isPasswordValid) {
-			throw new UserNotFoundError("invalid credentials", 401)
-		}
-
-		return user
+		return await auth.api.signInEmail({
+			body: {
+				email: data.email,
+				password: data.password
+			}
+		})
 	}
 }
