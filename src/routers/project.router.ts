@@ -6,6 +6,7 @@ import runnerRouter from "./runner.router";
 
 const projectRouter = new Hono<{ Variables: AuthVariables }>()
 
+projectRouter.use(authMiddleware)
 projectRouter.use(async (c: Context, next: () => Promise<void>) => {
 	const route = c.req.path
 	const relativePath = route.replace(/^\/[^/]+\//, '/')
