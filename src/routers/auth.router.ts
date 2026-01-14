@@ -1,9 +1,12 @@
 import { Hono } from "hono";
-import { loginController, registerController } from "../controllers/auth.controller";
+import {
+	loginController,
+	registerController,
+} from "../controllers/auth.controller";
 
-const authRouter = new Hono()
+const authRouter = new Hono();
 
-authRouter.post("/register", registerController)
-authRouter.post("/login", loginController)
+authRouter.post("/register", registerController);
+authRouter.post("/login", loginController);
 
-export default authRouter
+export default authRouter;

@@ -6,14 +6,14 @@ export class UserService {
 			body: {
 				name: name,
 				userId: userId,
-				rateLimitEnabled: false
-			}
-		})
+				rateLimitEnabled: false,
+			},
+		});
 	}
 
 	async getUserByApiKey(headers: Headers) {
 		return await auth.api.getSession({
-			headers: headers
-		})
+			headers: headers,
+		});
 	}
 }

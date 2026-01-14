@@ -1,30 +1,26 @@
 import { prisma } from "@/helpers/prisma";
 
 export default class ProjectService {
-	async createProject(
-		userId: string,
-		name: string,
-		description?: string
-	) {
+	async createProject(userId: string, name: string, description?: string) {
 		return await prisma.project.create({
 			data: {
 				name: name,
 				description: description,
 				user: {
 					connect: {
-						id: userId
-					}
-				}
-			}
-		})
+						id: userId,
+					},
+				},
+			},
+		});
 	}
 
 	async getProjectsByUserId(userId: string) {
 		return await prisma.project.findMany({
 			where: {
-				userId: userId
-			}
-		})
+				userId: userId,
+			},
+		});
 	}
 
 	async getProjectById(projectId: string, userId: string) {
@@ -32,9 +28,9 @@ export default class ProjectService {
 			where: {
 				id: projectId,
 				user: {
-					id: userId
-				}
-			}
-		})
+					id: userId,
+				},
+			},
+		});
 	}
 }

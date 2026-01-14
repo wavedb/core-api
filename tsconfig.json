@@ -14,12 +14,8 @@
 		"ignoreDeprecations": "6.0",
 		"baseUrl": ".",
 		"paths": {
-			"@/*": [
-				"src/*"
-			]
+			"@/*": ["src/*"]
 		}
 	},
-	"exclude": [
-		"prisma.config.ts"
-	]
+	"exclude": ["prisma.config.ts"]
 }

@@ -1,8 +1,11 @@
 import { Hono } from "hono";
-import { getMetricsController, writeMetricController } from "@/controllers/metric.controller";
+import {
+	getMetricsController,
+	writeMetricController,
+} from "@/controllers/metric.controller";
 
-const metricRouter = new Hono()
+const metricRouter = new Hono();
 
-metricRouter.get("/", getMetricsController)
-metricRouter.post("/write", writeMetricController)
-export default metricRouter
+metricRouter.get("/", getMetricsController);
+metricRouter.post("/write", writeMetricController);
+export default metricRouter;

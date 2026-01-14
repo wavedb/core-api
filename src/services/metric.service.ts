@@ -3,34 +3,42 @@ import { prisma } from "@/helpers/prisma";
 import type { GetMetricQueryValidationType } from "@/validations/metric.validation";
 
 export class MetricService {
-	async getMetricsByRunnerId(runnerId: string, params: GetMetricQueryValidationType) {
-		const { orderBy, limit, offset } = params
+	async getMetricsByRunnerId(
+		runnerId: string,
+		params: GetMetricQueryValidationType,
+	) {
+		const { orderBy, limit, offset } = params;
 
 		return await prisma.runnerMetric.findMany({
 			where: {
 				run: {
-					id: runnerId
-				}
+					id: runnerId,
+				},
 			},
 			orderBy: {
-				step: orderBy?.startsWith("step_") ? (orderBy.endsWith("_asc") ? "asc" : "desc") : undefined,
-				createdAt: orderBy?.startsWith("time_") ? (orderBy.endsWith("_asc") ? "asc" : "desc") : undefined
+				step: orderBy?.startsWith("step_")
+					? orderBy.endsWith("_asc")
+						? "asc"
+						: "desc"
+					: undefined,
+				createdAt: orderBy?.startsWith("time_")
+					? orderBy.endsWith("_asc")
+						? "asc"
+						: "desc"
+					: undefined,
 			},
 			take: limit,
-			skip: offset
-		})
+			skip: offset,
+		});
 	}
 
-	async getMetricByStep(
-		runnerId: string,
-		step: number
-	) {
+	async getMetricByStep(runnerId: string, step: number) {
 		return await prisma.runnerMetric.findFirst({
 			where: {
 				runId: runnerId,
-				step: step
-			}
-		})
+				step: step,
+			},
+		});
 	}
 
 	async writeMetric(
@@ -39,24 +47,27 @@ export class MetricService {
 		value: number,
 		step: number,
 		tag?: string,
-		force?: boolean
+		force?: boolean,
 	) {
-		const isExistingStep = await this.getMetricByStep(runnerId, step)
-		console.log(isExistingStep)
+		const isExistingStep = await this.getMetricByStep(runnerId, step);
+		console.log(isExistingStep);
 		if (isExistingStep) {
 			if (!force) {
-				throw new MetricWriteError(`metric for step ${step} already exists`, 409)
+				throw new MetricWriteError(
+					`metric for step ${step} already exists`,
+					409,
+				);
 			}
 			return await prisma.runnerMetric.update({
 				where: {
-					id: isExistingStep.id
+					id: isExistingStep.id,
 				},
 				data: {
 					name: name,
 					value: value,
-					tag: tag
-				}
-			})
+					tag: tag,
+				},
+			});
 		}
 
 		return await prisma.runnerMetric.create({
@@ -68,10 +79,10 @@ export class MetricService {
 
 				run: {
 					connect: {
-						id: runnerId
-					}
-				}
-			}
-		})
+						id: runnerId,
+					},
+				},
+			},
+		});
 	}
 }

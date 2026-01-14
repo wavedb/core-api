@@ -1,4 +1,4 @@
-import type { ContentfulStatusCode } from "hono/utils/http-status"
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { z } from "zod";
 
 export class BaseError extends Error {
@@ -19,21 +19,30 @@ export class BaseError extends Error {
 }
 
 export class UserAlreadyExistsError extends BaseError {
-	constructor(message: string = "user already exists", statusCode: ContentfulStatusCode = 400) {
+	constructor(
+		message: string = "user already exists",
+		statusCode: ContentfulStatusCode = 400,
+	) {
 		super(message, statusCode);
 		this.name = "UserAlreadyExistsError";
 	}
 }
 
 export class UserNotFoundError extends BaseError {
-	constructor(message: string = "user not found", statusCode: ContentfulStatusCode = 404) {
+	constructor(
+		message: string = "user not found",
+		statusCode: ContentfulStatusCode = 404,
+	) {
 		super(message, statusCode);
 		this.name = "UserNotFoundError";
 	}
 }
 
 export class RegistrationError extends BaseError {
-	constructor(message: string = "registration failed", statusCode: ContentfulStatusCode = 500) {
+	constructor(
+		message: string = "registration failed",
+		statusCode: ContentfulStatusCode = 500,
+	) {
 		super(message, statusCode);
 		this.name = "RegistrationError";
 	}
@@ -42,7 +51,11 @@ export class RegistrationError extends BaseError {
 export class ValidationError extends BaseError {
 	public readonly reasons: z.core.$ZodIssue[];
 
-	constructor(reasons: z.core.$ZodIssue[], message: string = "validation error", statusCode: ContentfulStatusCode = 400) {
+	constructor(
+		reasons: z.core.$ZodIssue[],
+		message: string = "validation error",
+		statusCode: ContentfulStatusCode = 400,
+	) {
 		super(message, statusCode);
 		this.name = "ValidationError";
 		this.reasons = reasons;
@@ -53,14 +66,17 @@ export class ValidationError extends BaseError {
 			...super.toJSON(),
 			reasons: this.reasons.map((issue) => ({
 				name: issue.path.join("."),
-				message: issue.message
+				message: issue.message,
 			})),
-		}
+		};
 	}
 }
 
 export class MetricWriteError extends BaseError {
-	constructor(message: string = "failed to write metric", statusCode: ContentfulStatusCode = 500) {
+	constructor(
+		message: string = "failed to write metric",
+		statusCode: ContentfulStatusCode = 500,
+	) {
 		super(message, statusCode);
 		this.name = "MetricWriteError";
 	}

@@ -2,12 +2,12 @@ import type { JwtVariables } from "hono/jwt";
 
 export type AuthVariables = {
 	userId: string;
-} & JwtVariables
+} & JwtVariables;
 
 export type ProjectVariables = {
 	projectId: string;
-} & AuthVariables
+} & AuthVariables;
 
 export type RunnerVariables = {
 	runnerId: string;
-} & ProjectVariables
+} & ProjectVariables;

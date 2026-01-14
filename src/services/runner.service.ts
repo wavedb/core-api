@@ -10,11 +10,11 @@ export class RunnerService {
 				config: JSON.parse(config),
 				project: {
 					connect: {
-						id: projectId
-					}
-				}
-			}
-		})
+						id: projectId,
+					},
+				},
+			},
+		});
 	}
 
 	async getRunnerById(runnerId: string, projectId: string) {
@@ -22,7 +22,7 @@ export class RunnerService {
 			where: {
 				id: runnerId,
 				projectId: projectId,
-			}
-		})
+			},
+		});
 	}
 }
