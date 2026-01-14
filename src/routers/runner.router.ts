@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { createRunnerController } from "@/controllers/runner.controller";
+import { createRunnerController, getRunnerController } from "@/controllers/runner.controller";
 import { apiKeyMiddleware } from "@/middlewares/auth";
 import { validProjectIdMiddleware, validRunnerIdMiddleware } from "@/middlewares/project";
 import type { AuthVariables } from "@/types/variables";
@@ -12,6 +12,8 @@ runnerRouter.use(validProjectIdMiddleware)
 runnerRouter.use("/:runnerId/*", validRunnerIdMiddleware)
 
 runnerRouter.post("/", createRunnerController)
+
+runnerRouter.get("/:runnerId", getRunnerController)
 runnerRouter.route("/:runnerId/metrics", metricRouter)
 
 export default runnerRouter

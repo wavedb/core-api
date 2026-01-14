@@ -1,11 +1,13 @@
 import { prisma } from "@/helpers/prisma";
 
 export class RunnerService {
-	async createRunner(name: string, projectId: string) {
+	async createRunner(name: string, projectId: string, config: string) {
+		console.log("Creating runner with config:", config);
 		return await prisma.run.create({
 			data: {
 				name: name,
 				status: "running",
+				config: JSON.parse(config),
 				project: {
 					connect: {
 						id: projectId
