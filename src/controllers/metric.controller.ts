@@ -23,11 +23,7 @@ export async function writeMetricScalarController(
 	}
 
 	if (bodyValidated.data.value === undefined) {
-		throw new ValidationError(
-			[],
-			"value is required for scalar metric",
-			400,
-		);
+		throw new ValidationError([], "value is required for scalar metric", 400);
 	}
 
 	const runnerId = c.req.param("runnerId");
@@ -61,12 +57,12 @@ export async function writeMetricImageController(
 		);
 	}
 
-	const minioHelper = new MinIOHelper()
-	await minioHelper.init()
+	const minioHelper = new MinIOHelper();
+	await minioHelper.init();
 	const imageFile = bodyValidated.data.value;
 	const runnerId = c.req.param("runnerId");
 	const projectId = c.req.param("projectId");
-	const objectName = `${projectId}/${runnerId}/step_${bodyValidated.data.step}/${bodyValidated.data.name}.png`
+	const objectName = `${projectId}/${runnerId}/step_${bodyValidated.data.step}/${bodyValidated.data.name}.png`;
 
 	if (imageFile instanceof File) {
 		if (imageFile.type !== "image/png" && imageFile.type !== "image/jpeg") {
@@ -77,11 +73,8 @@ export async function writeMetricImageController(
 			);
 		}
 
-		const imageBuffer = await imageFile.arrayBuffer()
-		await minioHelper.uploadImage(
-			objectName,
-			Buffer.from(imageBuffer)
-		)
+		const imageBuffer = await imageFile.arrayBuffer();
+		await minioHelper.uploadImage(objectName, Buffer.from(imageBuffer));
 
 		const metricService = new MetricService();
 		const data = await metricService.writeMetric(
@@ -89,7 +82,9 @@ export async function writeMetricImageController(
 			bodyValidated.data.name,
 			objectName,
 			bodyValidated.data.step ? Number(bodyValidated.data.step) : 0,
-			bodyValidated.data.tag ? `${bodyValidated.data.tag};image_url=${objectName}` : `image_url=${objectName}`,
+			bodyValidated.data.tag
+				? `${bodyValidated.data.tag};image_url=${objectName}`
+				: `image_url=${objectName}`,
 			bodyValidated.data.force ? bodyValidated.data.force === "true" : false,
 		);
 		return c.json({
@@ -97,11 +92,7 @@ export async function writeMetricImageController(
 			data: data,
 		});
 	} else {
-		throw new ValidationError(
-			[],
-			"image file is required",
-			400,
-		);
+		throw new ValidationError([], "image file is required", 400);
 	}
 }
 

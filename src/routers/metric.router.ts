@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import {
 	getMetricsController,
 	writeMetricImageController,
-	writeMetricScalarController
+	writeMetricScalarController,
 } from "@/controllers/metric.controller";
 
 const metricRouter = new Hono();

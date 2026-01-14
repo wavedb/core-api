@@ -52,11 +52,8 @@ app.onError((err, c) => {
 		);
 	}
 	if (NODE_ENV === "development") {
-		console.error(err)
-		return c.json(
-			{ message: "Internal Server Error", stack: err.stack },
-			500,
-		);
+		console.error(err);
+		return c.json({ message: "Internal Server Error", stack: err.stack }, 500);
 	} else {
 		return c.json({ message: "Internal Server Error" }, 500);
 	}
