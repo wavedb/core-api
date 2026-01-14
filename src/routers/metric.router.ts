@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import {
 	getMetricsController,
 	writeMetricAudioController,
@@ -9,7 +9,8 @@ import {
 
 const metricRouter = new Hono();
 
-metricRouter.get("/", getMetricsController);
+metricRouter.get("/scalar", async (c: Context) => getMetricsController(c, "SCALAR"));
+metricRouter.get("/image", async (c: Context) => getMetricsController(c, "IMAGE"));
 metricRouter.post("/write/scalar", writeMetricScalarController);
 metricRouter.post("/write/image", writeMetricImageController);
 metricRouter.post("/write/audio", writeMetricAudioController);

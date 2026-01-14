@@ -7,11 +7,13 @@ export class MetricService {
 	async getMetricsByRunnerId(
 		runnerId: string,
 		params: GetMetricQueryValidationType,
+		metricType: RunnerMetricType,
 	) {
 		const { orderBy, limit, offset } = params;
 
 		return await prisma.runnerMetric.findMany({
 			where: {
+				type: metricType,
 				run: {
 					id: runnerId,
 				},

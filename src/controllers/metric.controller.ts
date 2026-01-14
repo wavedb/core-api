@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import { ValidationError } from "@/exceptions";
+import type { RunnerMetricType } from "@/generated/prisma/enums";
 import { MinIOHelper } from "@/helpers/minio";
 import { MetricService } from "@/services/metric.service";
 import type { AuthVariables } from "@/types/variables";
@@ -186,6 +187,7 @@ export async function writeMetricSystemController(
 
 export async function getMetricsController(
 	c: Context<{ Variables: AuthVariables }>,
+	metricType: RunnerMetricType
 ) {
 	const { orderBy, limit, offset } = c.req.query();
 	const queriesValidated = await getMetricQueryValidation({
@@ -211,6 +213,7 @@ export async function getMetricsController(
 		data: await metricService.getMetricsByRunnerId(
 			runnerId,
 			queriesValidated.data,
+			metricType
 		),
 	});
 }
