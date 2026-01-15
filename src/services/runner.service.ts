@@ -1,18 +1,29 @@
+import { RunnerStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/helpers/prisma";
 
 export class RunnerService {
 	async createRunner(name: string, projectId: string, config: string) {
-		console.log("Creating runner with config:", config);
 		return await prisma.run.create({
 			data: {
 				name: name,
-				status: "running",
+				status: RunnerStatus.PENDING,
 				config: JSON.parse(config),
 				project: {
 					connect: {
 						id: projectId,
 					},
 				},
+			},
+		});
+	}
+
+	async markRunnerAs(runnerId: string, runnerStatus: RunnerStatus) {
+		return await prisma.run.update({
+			where: {
+				id: runnerId,
+			},
+			data: {
+				status: runnerStatus,
 			},
 		});
 	}

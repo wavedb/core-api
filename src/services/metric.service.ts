@@ -2,6 +2,7 @@ import { MetricWriteError } from "@/exceptions";
 import type { RunnerMetricType } from "@/generated/prisma/enums";
 import { prisma } from "@/helpers/prisma";
 import type { GetMetricQueryValidationType } from "@/validations/metric.validation";
+import { RunnerService } from "./runner.service";
 
 export class MetricService {
 	async getMetricsByRunnerId(
@@ -54,6 +55,11 @@ export class MetricService {
 		force?: boolean,
 	) {
 		const isExistingStep = await this.getMetricByStep(runnerId, step);
+
+		if (!isExistingStep) {
+			const runnerService = new RunnerService()
+			await runnerService.markRunnerAs(runnerId, "RUNNING")
+		}
 
 		if (type !== "SYSTEM" && isExistingStep) {
 			if (!force) {

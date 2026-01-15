@@ -2,7 +2,7 @@ import type { Context } from "hono";
 import { ValidationError } from "@/exceptions";
 import { RunnerService } from "@/services/runner.service";
 import type { RunnerVariables } from "@/types/variables";
-import { createRunnerValidation } from "@/validations/runner.validation";
+import { createRunnerValidation, markRunnerAsValidation } from "@/validations/runner.validation";
 
 export async function createRunnerController(
 	c: Context<{ Variables: RunnerVariables }>,
@@ -57,13 +57,40 @@ export async function getRunnerController(
 			message: "runner fetched successfully",
 			data: data
 				? {
-						id: data.id,
-						name: data.name,
-						status: data.status,
-						projectId: data.projectId,
-						config: data.config,
-					}
+					id: data.id,
+					name: data.name,
+					status: data.status,
+					projectId: data.projectId,
+					config: data.config,
+				}
 				: null,
+		},
+		200,
+	);
+}
+
+export async function markRunnerAsController(
+	c: Context<{ Variables: RunnerVariables }>,
+) {
+	const body = await c.req.json()
+	const bodyValidated = await markRunnerAsValidation(body)
+
+	if (!bodyValidated.success) {
+		throw new ValidationError(
+			bodyValidated.error.issues,
+			"validation failed",
+			400,
+		);
+	}
+
+	const runnerId = c.get("runnerId") as string;
+
+	const runnerService = new RunnerService()
+	await runnerService.markRunnerAs(runnerId, bodyValidated.data.status)
+
+	return c.json(
+		{
+			message: `runner marked as ${bodyValidated.data.status.toLowerCase()} successfully`,
 		},
 		200,
 	);

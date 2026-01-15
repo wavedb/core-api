@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import {
 	createRunnerController,
 	getRunnerController,
+	markRunnerAsController,
 } from "@/controllers/runner.controller";
 import { apiKeyMiddleware } from "@/middlewares/auth";
 import {
@@ -20,6 +21,7 @@ runnerRouter.use("/:runnerId/*", validRunnerIdMiddleware);
 runnerRouter.post("/", createRunnerController);
 
 runnerRouter.get("/:runnerId", getRunnerController);
+runnerRouter.post("/:runnerId/mark-as", markRunnerAsController);
 runnerRouter.route("/:runnerId/metrics", metricRouter);
 
 export default runnerRouter;
